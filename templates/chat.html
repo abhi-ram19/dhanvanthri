@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dhanvantari - Medical Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="https://img.icons8.com/fluency-systems-filled/48/medical-doctor.png" alt="icon"/>
+      Dhanvantari
+    </div>
+
+    <a class="nav-button" href="#"><i class="fas fa-plus-circle"></i> New Chat</a>
+
+    <div class="section-title">My Tools</div>
+    <a class="nav-button" href="#"><i class="fas fa-notes-medical"></i> My Health Journal</a>
+    <a class="nav-button" href="bmi.html"><i class="fas fa-calculator"></i> BMI Calculator</a>
+    <a class="nav-button" href="#"><i class="fas fa-user-md"></i> Ask a Doctor</a>
+    <a class="nav-button" href="#"><i class="fas fa-phone"></i> Emergency Contacts</a>
+    <a class="nav-button" href="#"><i class="fas fa-comments"></i> Chats</a>
+
+    <div class="section-title">Explore Tools</div>
+
+    <div class="auth-buttons">
+      <button class="login">Login</button>
+      <button class="signup">Sign up</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="header">
+      <div class="logo-main">
+        <i class="fas fa-stethoscope"></i> LIFE<span>ACE</span>
+      </div>
+      <div class="prompt">How can I help you today?</div>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+      <!-- Chat messages appear here -->
+    </div>
+
+    <div class="bottom-area">
+      <div class="search-bar">
+        <textarea class="query-box" rows="1" id="userInput" placeholder="Ask a medical query..."></textarea>
+        <button class="search-button" onclick="submitQuery()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+
+      <div class="features">
+        <div class="feature">
+          <button class="blue" onclick="alert('Symptom Checker')"><i class="fas fa-wave-square"></i></button>
+          <label>Symptom Checker</label>
+        </div>
+        <div class="feature">
+          <button class="grey" onclick="alert('Learn About')"><i class="fas fa-book"></i></button>
+          <label>Learn about</label>
+        </div>
+        <div class="feature">
+          <button class="orange" onclick="alert('Treatment')"><i class="fas fa-stethoscope"></i></button>
+          <label>Treatment</label>
+        </div>
+        <div class="feature">
+          <button class="green" onclick="alert('Medical Tips')"><i class="fas fa-lightbulb"></i></button>
+          <label>Medical tips</label>
+        </div>
+        <div class="feature">
+          <button class="grey" onclick="alert('See More')"><i class="fas fa-plus"></i></button>
+          <label>See More</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function submitQuery() {
+      const userInput = document.getElementById("userInput").value;
+      if (!userInput.trim()) return;
+  
+      const chatWindow = document.getElementById("chatWindow");
+  
+      // Show user message
+      const userMsg = document.createElement("div");
+      userMsg.classList.add("message", "user-message");
+      userMsg.innerText = userInput;
+      chatWindow.appendChild(userMsg);
+  
+      // Clear input
+      document.getElementById("userInput").value = "";
+  
+      // Send to backend
+      fetch("/get_response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: userInput }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        const botMsg = document.createElement("div");
+        botMsg.classList.add("message", "bot-message");
+        botMsg.innerText = data.response;
+        chatWindow.appendChild(botMsg);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      });
+    }
+  </script>
+  
+ 
+
+</body>
+</html>
